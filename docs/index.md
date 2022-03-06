@@ -7,3 +7,7 @@ output:
   bookdown::gitbook:
     number_sections: false
 ---
+
+# Preface {-}
+This is my personal R solutions for [NLP 100 Exercise 2020](https://nlp100.github.io/en/).
+For the test of [bookdown](https://bookdown.org/), I opened this website.
