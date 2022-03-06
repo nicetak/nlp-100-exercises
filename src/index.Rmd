@@ -1,0 +1,9 @@
+---
+title: "A Solution of NLP 100 Exercise"
+author: "Kazuharu Yanagimoto"
+date: '`r format(Sys.time(), "%B %d, %Y")`'
+site: bookdown::bookdown_site
+output:
+  bookdown::gitbook:
+    number_sections: false
+---
