@@ -284,8 +284,6 @@
       "Repository": "RSPM",
       "Hash": "c1078316e1d4f70275fc1ea60c0bc431",
       "Requirements": []
-<<<<<<< Updated upstream
-=======
     },
     "rlang": {
       "Package": "rlang",
@@ -424,7 +422,6 @@
       "Repository": "RSPM",
       "Hash": "458bb38374d73bf83b1bb85e353da200",
       "Requirements": []
->>>>>>> Stashed changes
     }
   }
 }
