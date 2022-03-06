@@ -1,0 +1,134 @@
+# Chapter 2: UNIX Commands
+
+```{r setup, include=FALSE}
+library(here)
+library(dplyr)
+library(stringr)
+library(readr)
+
+url <- "https://nlp100.github.io/data/popular-names.txt"
+path <- here("data/popular-names.txt")
+if(!file.exists(path)){
+  downloader::download(url, path)  
+}
+
+lines <- readLines(path)
+
+data <- read_tsv(path, col_names = c("name", "gender", "num", "year"),
+                 col_types = "ffdd")
+```
+
+## 10. Line count
+```{r}
+length(lines)
+```
+```{bash}
+wc ../data/popular-names.txt
+```
+
+## 11. Replace tabs into spaces
+```{r}
+lines %>%
+  str_replace_all("\t", " ") %>%
+  head(3)
+```
+```{bash}
+cat ../data/popular-names.txt | tr "\t" " " | head -3
+```
+
+## 12. col1.txt from the first column, col2.txt from the second column
+```{r}
+data$name %>%
+  paste(collapse = "\n") %>%
+  write(here("result/col1.txt"))
+
+data$gender %>%
+  paste(collapse = "\n") %>%
+  write(here("result/col2.txt"))
+```
+
+```{bash}
+cut -f 1 ../data/popular-names.txt > ../result/col1_shell.txt
+cut -f 2 ../data/popular-names.txt > ../result/col2_shell.txt
+```
+
+```{bash}
+diff ../result/col1.txt ../result/col1_shell.txt
+diff ../result/col2.txt ../result/col2_shell.txt
+# NO differences detected
+```
+
+## 13. Merging col1.txt and col2.txt
+```{r}
+col1 <- readLines(here("result/col1.txt"))
+col2 <- readLines(here("result/col2.txt"))
+
+paste(col1, col2, sep = "\t") %>% head(3)
+```
+```{bash}
+paste -d "\t" ../result/col1.txt ../result/col2.txt | head -3
+```
+
+## 14. First N lines
+```{r}
+head(lines, 3)
+```
+```{bash}
+head -3 ../data/popular-names.txt
+```
+
+## 15. Last N lines
+```{r}
+tail(lines, 3)
+```
+```{bash}
+tail -3 ../data/popular-names.txt
+```
+
+## 16. Split a file into N pieces
+```{r}
+split_lines <- function(lines, n){
+  split(lines, sort(rep_len(1:n, length(lines)))) %>%
+    setNames(NULL)
+}
+
+split_lines(lines, 3) %>%
+  lapply(head, 3)
+```
+
+```{bash}
+split -l 1000 ../data/popular-names.txt ../result/popular-names-
+```
+
+
+## 17. Distinct strings in the first column
+```{r}
+data$name %>% levels() %>% sort() %>% head(5)
+```
+```{bash}
+cut -f 1 ../data/popular-names.txt | sort -s | uniq | head -5
+```
+## 18. Sort lines in descending order of the third column
+
+```{r}
+data %>%
+  arrange(desc(num)) %>%
+  head(5)
+```
+```{bash}
+sort -n -r -k 3 ../data/popular-names.txt | head -5
+```
+
+## 19. Frequency of a string in the first column in descending order
+```{r}
+data %>%
+  group_by(name) %>%
+  count() %>%
+  arrange(desc(n)) %>%
+  head(5)
+```
+
+```{bash}
+cut -f 1 ../data/popular-names.txt | sort | uniq -c | sort -n -r -k 1 | head -5
+```
+
