@@ -244,7 +244,7 @@ typoglycemia(s)
 ```
 
 ```
-## [1] "I conl'udt bleivee that I cuold aaluctly utrnndased what I was rindaeg : the peanhnemol peowr of the hmuan mind ."
+## [1] "I cudlo'nt beileve that I cuold alclatuy uasrnntedd what I was rdiaeng : the pnameoenhl power of the huamn mind ."
 ```
 
 

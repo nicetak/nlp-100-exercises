@@ -1,5 +1,7 @@
 FROM rocker/rstudio
 
+RUN apt update && apt install -y openssh-client
+
 # R Packages
 RUN R -e "install.packages(c('languageserver', 'renv'))"
 
