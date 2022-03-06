@@ -1,0 +1,1 @@
+R -e "bookdown::render_book('src')"
