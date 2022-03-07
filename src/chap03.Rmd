@@ -1,0 +1,108 @@
+# Chapter 3: Regular Expression
+
+```{bash, include=FALSE}
+if [ ! -f ../data/enwiki-country.json ]
+then
+wget -nc -O ../data/enwiki-country.json.gz https://nlp100.github.io/data/enwiki-country.json.gz
+gzip -d ../data/enwiki-country.json.gz
+fi
+```
+
+```{r setup, include=FALSE}
+rm(list = ls())
+library(here)
+library(jsonlite)
+library(stringr)
+```
+
+## 20. Rea JSON documents
+>Read the JSON documents and output the body of the article about the United Kingdom. Reuse the output in problems 21-29.
+
+```{r}
+data <- readLines(here("data/enwiki-country.json"))
+article_UK <- grep("^\\{\"title\": \"United Kingdom\"", data, value = T)
+lines_UK <- fromJSON(article_UK)$text %>% str_split("\\n") %>% unlist()
+
+lines_UK[1:5]
+```
+
+## 21. Lines with category names
+>Extract lines that define the categories of the article.
+
+```{r}
+lines_cat <- grep("\\[\\[Category:.*\\]\\]", lines_UK, value = T)
+lines_cat %>%
+  head()
+```
+
+## 22. Category names
+>Extract the category names of the article.
+
+```{r}
+lines_cat %>%
+  lapply(function(x) str_replace_all(x, "^\\[\\[Category:|\\| |\\]\\]$", "")) %>%
+  unlist() %>%
+  head()
+```
+
+## 23. Section structure
+>Extract section names in the article with their levels. For example, the level of the section is 1 for the MediaWiki markup "== Section name ==".
+
+```{r}
+sections <- lines_UK %>%
+  str_extract_all("==.*==") %>%
+  unlist()
+
+for(i in 1:6){
+  s <- sections[i]
+  level <- str_count(s, "=") / 2 - 1
+  section <- str_replace_all(s, "\\s*={2,4}\\s*", "")
+  print(paste0(level, " ", section))
+}
+
+```
+
+## 24. Media references
+>Extract references to media files linked from the article.
+
+```{r}
+lines_UK %>%
+  str_extract_all("\\[\\[File:.*?(\\||\\]\\])") %>%
+  unlist() %>%
+  str_replace_all("^\\[\\[File:|\\|$|\\]\\]$", "") %>%
+  head()
+```
+
+## 25. Infobox
+>Extract field names and their values in the Infobox “country”, and store them in a dictionary object.
+
+```{r}
+tmp <- article_UK %>%
+  str_extract_all("\\{\\{Infobox country.*?(\\{\\{.*?\\}\\}.*?)*?\\}\\}") %>%
+  unlist() %>%
+  str_replace_all("^\\{\\{Infobox country\\\\n\\| |\\}\\}", "") %>%
+  unlist() %>%
+  str_split("\\\\n\\| ") %>%
+  unlist() %>%
+  str_replace_all(" += ", "===") %>%
+  unlist()
+
+for(i in 1:6){
+  s <- tmp[i]
+  x <- str_split(s, "===") %>% unlist()
+  print(paste0(x[1], ": ", x[2]))
+}
+```
+
+
+## 26. Remove emphasis markups
+>In addition to the process of the problem 25, remove emphasis MediaWiki markups from the values. See Help:Cheatsheet.
+
+## 27. Remove internal links
+>In addition to the process of the problem 26, remove internal links from the values.
+
+## 28. Remove MediaWiki markups
+>In addition to the process of the problem 27, remove MediaWiki markups from the values as much as you can, and obtain the basic information of the country in plain text format.
+
+## 29. Country flag
+>Obtain the URL of the country flag by using the analysis result of Infobox.
