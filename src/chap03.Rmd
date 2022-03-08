@@ -13,6 +13,8 @@ rm(list = ls())
 library(here)
 library(jsonlite)
 library(stringr)
+library(httr)
+library(dplyr)
 ```
 
 ## 20. Rea JSON documents
@@ -87,22 +89,73 @@ tmp <- article_UK %>%
   str_replace_all(" += ", "===") %>%
   unlist()
 
-for(i in 1:6){
-  s <- tmp[i]
+infobox <- tibble(key = character(), value = character())
+
+for(s in tmp){
   x <- str_split(s, "===") %>% unlist()
-  print(paste0(x[1], ": ", x[2]))
+  infobox <- infobox %>% bind_rows(tibble(key = x[1], value = x[2]))
 }
+
+infobox
 ```
 
 
 ## 26. Remove emphasis markups
->In addition to the process of the problem 25, remove emphasis MediaWiki markups from the values. See Help:Cheatsheet.
+>In addition to the process of the problem 25, remove emphasis MediaWiki markups from the values.
+
+```{r}
+infobox <- infobox %>%
+  mutate(value = str_replace_all(value, "''|'''", ""))
+
+infobox
+```
+
 
 ## 27. Remove internal links
 >In addition to the process of the problem 26, remove internal links from the values.
+
+```{r}
+
+```
+
 
 ## 28. Remove MediaWiki markups
 >In addition to the process of the problem 27, remove MediaWiki markups from the values as much as you can, and obtain the basic information of the country in plain text format.
 
 ## 29. Country flag
 >Obtain the URL of the country flag by using the analysis result of Infobox.
+
+```{r}
+file <- infobox$value[infobox$key == "image_flag"]
+url <- "https://en.wikipedia.org/w/api.php"
+query <- list(
+  action = "query",
+  format = "json",
+  prop = "imageinfo",
+  titles = paste0("File:", file),
+  iiprop = "url"
+)
+
+res <- GET(url=url, query=query)
+image_info <- res %>%
+  content("text") %>%
+  fromJSON()
+
+url_image <- image_info$query$pages[[1]]$imageinfo$url
+```
+
+`r sprintf("![Obtained image](%s)", url_image)`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
