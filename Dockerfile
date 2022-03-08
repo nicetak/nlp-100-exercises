@@ -1,4 +1,4 @@
-FROM rocker/rstudio
+FROM rocker/tidyverse
 
 RUN apt update && apt install -y openssh-client
 

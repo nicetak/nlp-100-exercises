@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4: POS Tagging | A Solution of NLP 100 Exercise</title>
+  <meta name="description" content="Chapter 4: POS Tagging | A Solution of NLP 100 Exercise" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4: POS Tagging | A Solution of NLP 100 Exercise" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4: POS Tagging | A Solution of NLP 100 Exercise" />
+  
+  
+  
+
+<meta name="author" content="Kazuharu Yanagimoto" />
+
+
+<meta name="date" content="2022-03-08" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chapter-3-regular-expression.html"/>
+
+<script src="libs/header-attrs-2.12/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="index.html#preface">Preface<span></span></a></li>
+<li><a href="chapter-1-warm-up.html#chapter-1-warm-up">Chapter 1: Warm-up<span></span></a>
+<ul>
+<li><a href="chapter-1-warm-up.html#reversed-string">00. Reversed string<span></span></a></li>
+<li><a href="chapter-1-warm-up.html#schooled">01. “schooled”<span></span></a></li>
+<li><a href="chapter-1-warm-up.html#shoe-cold-schooled">02. “shoe” + “cold” = “schooled”<span></span></a></li>
+<li><a href="chapter-1-warm-up.html#pi">03. Pi<span></span></a></li>
+<li><a href="chapter-1-warm-up.html#atomic-symbols">04. Atomic symbols<span></span></a></li>
+<li><a href="chapter-1-warm-up.html#n-gram">05. n-gram<span></span></a></li>
+<li><a href="chapter-1-warm-up.html#set">06. Set<span></span></a></li>
+<li><a href="chapter-1-warm-up.html#template-based-sentence-generation">07. Template-based sentence generation<span></span></a></li>
+<li><a href="chapter-1-warm-up.html#cipher-text">08. Cipher text<span></span></a></li>
+<li><a href="chapter-1-warm-up.html#typoglycemia">09. Typoglycemia<span></span></a></li>
+</ul></li>
+<li><a href="chapter-2-unix-commands.html#chapter-2-unix-commands">Chapter 2: UNIX Commands<span></span></a>
+<ul>
+<li><a href="chapter-2-unix-commands.html#line-count">10. Line count<span></span></a></li>
+<li><a href="chapter-2-unix-commands.html#replace-tabs-into-spaces">11. Replace tabs into spaces<span></span></a></li>
+<li><a href="chapter-2-unix-commands.html#col1.txt-from-the-first-column-col2.txt-from-the-second-column">12. col1.txt from the first column, col2.txt from the second column<span></span></a></li>
+<li><a href="chapter-2-unix-commands.html#merging-col1.txt-and-col2.txt">13. Merging col1.txt and col2.txt<span></span></a></li>
+<li><a href="chapter-2-unix-commands.html#first-n-lines">14. First N lines<span></span></a></li>
+<li><a href="chapter-2-unix-commands.html#last-n-lines">15. Last N lines<span></span></a></li>
+<li><a href="chapter-2-unix-commands.html#split-a-file-into-n-pieces">16. Split a file into N pieces<span></span></a></li>
+<li><a href="chapter-2-unix-commands.html#distinct-strings-in-the-first-column">17. Distinct strings in the first column<span></span></a></li>
+<li><a href="chapter-2-unix-commands.html#sort-lines-in-descending-order-of-the-third-column">18. Sort lines in descending order of the third column<span></span></a></li>
+<li><a href="chapter-2-unix-commands.html#frequency-of-a-string-in-the-first-column-in-descending-order">19. Frequency of a string in the first column in descending order<span></span></a></li>
+</ul></li>
+<li><a href="chapter-3-regular-expression.html#chapter-3-regular-expression">Chapter 3: Regular Expression<span></span></a>
+<ul>
+<li><a href="chapter-3-regular-expression.html#rea-json-documents">20. Rea JSON documents<span></span></a></li>
+<li><a href="chapter-3-regular-expression.html#lines-with-category-names">21. Lines with category names<span></span></a></li>
+<li><a href="chapter-3-regular-expression.html#category-names">22. Category names<span></span></a></li>
+<li><a href="chapter-3-regular-expression.html#section-structure">23. Section structure<span></span></a></li>
+<li><a href="chapter-3-regular-expression.html#media-references">24. Media references<span></span></a></li>
+<li><a href="chapter-3-regular-expression.html#infobox">25. Infobox<span></span></a></li>
+<li><a href="chapter-3-regular-expression.html#remove-emphasis-markups">26. Remove emphasis markups<span></span></a></li>
+<li><a href="chapter-3-regular-expression.html#remove-internal-links">27. Remove internal links<span></span></a></li>
+<li><a href="chapter-3-regular-expression.html#remove-mediawiki-markups">28. Remove MediaWiki markups<span></span></a></li>
+<li><a href="chapter-3-regular-expression.html#country-flag">29. Country flag<span></span></a></li>
+</ul></li>
+<li><a href="chapter-4-pos-tagging.html#chapter-4-pos-tagging">Chapter 4: POS Tagging<span></span></a>
+<ul>
+<li><a href="chapter-4-pos-tagging.html#reading-the-result">30. Reading the result<span></span></a></li>
+<li><a href="chapter-4-pos-tagging.html#verbs">31. Verbs<span></span></a></li>
+<li><a href="chapter-4-pos-tagging.html#base-forms-of-verbs">32. Base forms of verbs<span></span></a></li>
+<li><a href="chapter-4-pos-tagging.html#a-of-b">33. A of B<span></span></a></li>
+<li><a href="chapter-4-pos-tagging.html#a-b">34. A B<span></span></a></li>
+<li><a href="chapter-4-pos-tagging.html#frequency-of-words">35. Frequency of words<span></span></a></li>
+<li><a href="chapter-4-pos-tagging.html#top-ten-frequent-words">36. Top-ten frequent words<span></span></a></li>
+<li><a href="chapter-4-pos-tagging.html#top-ten-words-co-occurring-with-alice">37. Top-ten words co-occurring with ‘Alice’<span></span></a></li>
+<li><a href="chapter-4-pos-tagging.html#histogram">38. Histogram<span></span></a></li>
+<li><a href="chapter-4-pos-tagging.html#zipfs-law">39. Zipf’s law<span></span></a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A Solution of NLP 100 Exercise</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chapter-4-pos-tagging" class="section level1 hasAnchor">
+<h1>Chapter 4: POS Tagging<a href="chapter-4-pos-tagging.html#chapter-4-pos-tagging" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="reading-the-result" class="section level2 hasAnchor">
+<h2>30. Reading the result<a href="chapter-4-pos-tagging.html#reading-the-result" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<blockquote>
+<p>Implement a program that reads the result of part-of-speech tagging. Here, represent a sentence as a list of mapping objects, each of which associates a surface form, lemma (base form), part-of-speech tag with the keys text, lemma, pos. Use this representation in the rest of the problems.</p>
+</blockquote>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="chapter-4-pos-tagging.html#cb1-1" aria-hidden="true" tabindex="-1"></a>lines <span class="ot">&lt;-</span> <span class="fu">readLines</span>(<span class="fu">here</span>(<span class="st">&quot;data/alice.txt.conll&quot;</span>))</span>
+<span id="cb1-2"><a href="chapter-4-pos-tagging.html#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="chapter-4-pos-tagging.html#cb1-3" aria-hidden="true" tabindex="-1"></a>alice <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">id_sentence =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb1-4"><a href="chapter-4-pos-tagging.html#cb1-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">text =</span> <span class="fu">character</span>(),</span>
+<span id="cb1-5"><a href="chapter-4-pos-tagging.html#cb1-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">lemma =</span> <span class="fu">character</span>(),</span>
+<span id="cb1-6"><a href="chapter-4-pos-tagging.html#cb1-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">pos =</span> <span class="fu">character</span>())</span>
+<span id="cb1-7"><a href="chapter-4-pos-tagging.html#cb1-7" aria-hidden="true" tabindex="-1"></a>id_sentence <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-8"><a href="chapter-4-pos-tagging.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(line <span class="cf">in</span> lines){</span>
+<span id="cb1-9"><a href="chapter-4-pos-tagging.html#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(line <span class="sc">==</span> <span class="st">&quot;&quot;</span>){</span>
+<span id="cb1-10"><a href="chapter-4-pos-tagging.html#cb1-10" aria-hidden="true" tabindex="-1"></a>    id_sentence <span class="ot">&lt;-</span> id_sentence <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb1-11"><a href="chapter-4-pos-tagging.html#cb1-11" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb1-12"><a href="chapter-4-pos-tagging.html#cb1-12" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">str_split</span>(line, <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb1-13"><a href="chapter-4-pos-tagging.html#cb1-13" aria-hidden="true" tabindex="-1"></a>    alice <span class="ot">&lt;-</span> alice <span class="sc">%&gt;%</span></span>
+<span id="cb1-14"><a href="chapter-4-pos-tagging.html#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">add_row</span>(<span class="at">id_sentence =</span> id_sentence, <span class="at">text =</span> x[<span class="dv">2</span>], <span class="at">lemma =</span> x[<span class="dv">3</span>], <span class="at">pos =</span> x[<span class="dv">4</span>])</span>
+<span id="cb1-15"><a href="chapter-4-pos-tagging.html#cb1-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-16"><a href="chapter-4-pos-tagging.html#cb1-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-17"><a href="chapter-4-pos-tagging.html#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="chapter-4-pos-tagging.html#cb1-18" aria-hidden="true" tabindex="-1"></a>alice <span class="ot">&lt;-</span> alice <span class="sc">%&gt;%</span></span>
+<span id="cb1-19"><a href="chapter-4-pos-tagging.html#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">&quot;id&quot;</span>)</span>
+<span id="cb1-20"><a href="chapter-4-pos-tagging.html#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="chapter-4-pos-tagging.html#cb1-21" aria-hidden="true" tabindex="-1"></a>alice <span class="sc">%&gt;%</span></span>
+<span id="cb1-22"><a href="chapter-4-pos-tagging.html#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 5
+##      id id_sentence text       lemma      pos  
+##   &lt;int&gt;       &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;
+## 1     1           1 ALICE      ALICE      NNP  
+## 2     2           1 &#39;S         &#39;s         POS  
+## 3     3           1 ADVENTURES ADVENTURES NNP  
+## 4     4           1 IN         in         IN   
+## 5     5           1 WONDERLAND WONDERLAND NNP  
+## 6     6           2 Lewis      Lewis      NNP</code></pre>
+</div>
+<div id="verbs" class="section level2 hasAnchor">
+<h2>31. Verbs<a href="chapter-4-pos-tagging.html#verbs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<blockquote>
+<p>Extract surface forms of all verbs appearing in the text.</p>
+</blockquote>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="chapter-4-pos-tagging.html#cb3-1" aria-hidden="true" tabindex="-1"></a>alice <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="chapter-4-pos-tagging.html#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(pos, <span class="st">&quot;VB&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="chapter-4-pos-tagging.html#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(text) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="chapter-4-pos-tagging.html#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
+<pre><code>## [1] &quot;was&quot;       &quot;beginning&quot; &quot;get&quot;       &quot;sitting&quot;   &quot;having&quot;    &quot;do&quot;</code></pre>
+</div>
+<div id="base-forms-of-verbs" class="section level2 hasAnchor">
+<h2>32. Base forms of verbs<a href="chapter-4-pos-tagging.html#base-forms-of-verbs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<blockquote>
+<p>Extract lemmas of all verbs appearing in the text.</p>
+</blockquote>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="chapter-4-pos-tagging.html#cb5-1" aria-hidden="true" tabindex="-1"></a>alice <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="chapter-4-pos-tagging.html#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(pos, <span class="st">&quot;VB&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="chapter-4-pos-tagging.html#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(lemma) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="chapter-4-pos-tagging.html#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
+<pre><code>## [1] &quot;be&quot;    &quot;begin&quot; &quot;get&quot;   &quot;sit&quot;   &quot;have&quot;  &quot;do&quot;</code></pre>
+</div>
+<div id="a-of-b" class="section level2 hasAnchor">
+<h2>33. A of B<a href="chapter-4-pos-tagging.html#a-of-b" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<blockquote>
+<p>Extract noun phrases in the form of “A of B”, where A and B are nouns.</p>
+</blockquote>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="chapter-4-pos-tagging.html#cb7-1" aria-hidden="true" tabindex="-1"></a>is_a_of_b <span class="ot">&lt;-</span> <span class="cf">function</span>(i){</span>
+<span id="cb7-2"><a href="chapter-4-pos-tagging.html#cb7-2" aria-hidden="true" tabindex="-1"></a>  alice<span class="sc">$</span>pos[i] <span class="sc">==</span> <span class="st">&quot;NN&quot;</span> <span class="sc">&amp;</span> alice<span class="sc">$</span>text[i<span class="sc">+</span><span class="dv">1</span>] <span class="sc">==</span> <span class="st">&quot;of&quot;</span> <span class="sc">&amp;</span> alice<span class="sc">$</span>pos[i<span class="sc">+</span><span class="dv">2</span>] <span class="sc">%in%</span> <span class="st">&quot;NN&quot;</span></span>
+<span id="cb7-3"><a href="chapter-4-pos-tagging.html#cb7-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-4"><a href="chapter-4-pos-tagging.html#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="chapter-4-pos-tagging.html#cb7-5" aria-hidden="true" tabindex="-1"></a>a_of_b <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb7-6"><a href="chapter-4-pos-tagging.html#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(<span class="fu">nrow</span>(alice)<span class="sc">-</span><span class="dv">2</span>)){</span>
+<span id="cb7-7"><a href="chapter-4-pos-tagging.html#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is_a_of_b</span>(i)){</span>
+<span id="cb7-8"><a href="chapter-4-pos-tagging.html#cb7-8" aria-hidden="true" tabindex="-1"></a>    a_of_b <span class="ot">&lt;-</span> <span class="fu">c</span>(a_of_b, <span class="fu">sprintf</span>(<span class="st">&quot;%s of %s&quot;</span>, alice<span class="sc">$</span>text[i], alice<span class="sc">$</span>text[i<span class="sc">+</span><span class="dv">2</span>]))</span>
+<span id="cb7-9"><a href="chapter-4-pos-tagging.html#cb7-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-10"><a href="chapter-4-pos-tagging.html#cb7-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-11"><a href="chapter-4-pos-tagging.html#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="chapter-4-pos-tagging.html#cb7-12" aria-hidden="true" tabindex="-1"></a>a_of_b</span></code></pre></div>
+<pre><code>##  [1] &quot;plenty of time&quot;          &quot;saucer of milk&quot;         
+##  [3] &quot;sort of way&quot;             &quot;flavour of cherry-tart&quot; 
+##  [5] &quot;number of bathing&quot;       &quot;knowledge of history&quot;   
+##  [7] &quot;subject of conversation&quot; &quot;question of course&quot;     
+##  [9] &quot;person of authority&quot;     &quot;sort of circle&quot;         
+## [11] &quot;deal of thought&quot;         &quot;sort of thing&quot;          
+## [13] &quot;sort of chance&quot;          &quot;sort of life&quot;           
+## [15] &quot;kind of thing&quot;           &quot;bit of stick&quot;           
+## [17] &quot;yelp of delight&quot;         &quot;game of play&quot;           
+## [19] &quot;state of mind&quot;           &quot;tone of delight&quot;        
+## [21] &quot;length of neck&quot;          &quot;wink of sleep&quot;          
+## [23] &quot;kind of serpent&quot;         &quot;sort of use&quot;            
+## [25] &quot;subject of conversation&quot; &quot;cauldron of soup&quot;       
+## [27] &quot;agony of terror&quot;         &quot;sort of lullaby&quot;        
+## [29] &quot;way of nursing&quot;          &quot;sort of knot&quot;           
+## [31] &quot;bit of mushroom&quot;         &quot;PLENTY of room&quot;         
+## [33] &quot;cup of tea&quot;              &quot;sort of meaning&quot;        
+## [35] &quot;piece of rudeness&quot;       &quot;business of MINE&quot;       
+## [37] &quot;sentence of execution&quot;   &quot;scream of laughter&quot;     
+## [39] &quot;voice of thunder&quot;        &quot;way of escape&quot;          
+## [41] &quot;friend of mine&quot;          &quot;sort of way&quot;            
+## [43] &quot;time of life&quot;            &quot;kind of rule&quot;           
+## [45] &quot;sentence of execution&quot;   &quot;ledge of rock&quot;          
+## [47] &quot;kind of authority&quot;       &quot;scroll of parchment&quot;    
+## [49] &quot;court of justice&quot;        &quot;globe of goldfish&quot;      
+## [51] &quot;sort of idea&quot;            &quot;piece of evidence&quot;      
+## [53] &quot;atom of meaning&quot;         &quot;atom of meaning&quot;        
+## [55] &quot;world of trouble&quot;        &quot;half of fright&quot;         
+## [57] &quot;half of anger&quot;</code></pre>
+</div>
+<div id="a-b" class="section level2 hasAnchor">
+<h2>34. A B<a href="chapter-4-pos-tagging.html#a-b" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<blockquote>
+<p>Extract the longest noun phrase consisting of consecutive nouns.</p>
+</blockquote>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="chapter-4-pos-tagging.html#cb9-1" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> alice <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="chapter-4-pos-tagging.html#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(pos <span class="sc">==</span> <span class="st">&quot;NN&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="chapter-4-pos-tagging.html#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(id)</span>
+<span id="cb9-4"><a href="chapter-4-pos-tagging.html#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="chapter-4-pos-tagging.html#cb9-5" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="fu">diff</span>(v) <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb9-6"><a href="chapter-4-pos-tagging.html#cb9-6" aria-hidden="true" tabindex="-1"></a>temp2 <span class="ot">&lt;-</span> <span class="fu">rle</span>(temp)</span>
+<span id="cb9-7"><a href="chapter-4-pos-tagging.html#cb9-7" aria-hidden="true" tabindex="-1"></a>ids <span class="ot">&lt;-</span> v[<span class="fu">which</span>(temp <span class="sc">==</span> <span class="fu">with</span>(temp2, values[<span class="fu">which.max</span>(lengths)]))]</span>
+<span id="cb9-8"><a href="chapter-4-pos-tagging.html#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="chapter-4-pos-tagging.html#cb9-9" aria-hidden="true" tabindex="-1"></a>alice[alice<span class="sc">$</span>id <span class="sc">%in%</span> ids, ]<span class="sc">$</span>text</span></code></pre></div>
+<pre><code>## [1] &quot;CHAPTER&quot; &quot;I.&quot;</code></pre>
+</div>
+<div id="frequency-of-words" class="section level2 hasAnchor">
+<h2>35. Frequency of words<a href="chapter-4-pos-tagging.html#frequency-of-words" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<blockquote>
+<p>Obtain the list of words and frequencies of their occurrences sorted by descending order of frequency.</p>
+</blockquote>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="chapter-4-pos-tagging.html#cb11-1" aria-hidden="true" tabindex="-1"></a>freq_words <span class="ot">&lt;-</span> alice <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="chapter-4-pos-tagging.html#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(lemma) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="chapter-4-pos-tagging.html#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span>
+<span id="cb11-4"><a href="chapter-4-pos-tagging.html#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="chapter-4-pos-tagging.html#cb11-5" aria-hidden="true" tabindex="-1"></a>freq_words <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="chapter-4-pos-tagging.html#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 2
+##   lemma     n
+##   &lt;chr&gt; &lt;int&gt;
+## 1 ,      2418
+## 2 the    1639
+## 3 &#39;      1130
+## 4 `      1081
+## 5 be     1076
+## 6 .       986</code></pre>
+</div>
+<div id="top-ten-frequent-words" class="section level2 hasAnchor">
+<h2>36. Top-ten frequent words<a href="chapter-4-pos-tagging.html#top-ten-frequent-words" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<blockquote>
+<p>Visualize the top-ten frequent words and their frequencies with a chart (e.g., bar chart).</p>
+</blockquote>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="chapter-4-pos-tagging.html#cb13-1" aria-hidden="true" tabindex="-1"></a>freq_words <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="chapter-4-pos-tagging.html#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="chapter-4-pos-tagging.html#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(lemma, <span class="sc">-</span>n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="chapter-4-pos-tagging.html#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="chapter-4-pos-tagging.html#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;count&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="chapter-4-pos-tagging.html#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="chap04_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="top-ten-words-co-occurring-with-alice" class="section level2 hasAnchor">
+<h2>37. Top-ten words co-occurring with ‘Alice’<a href="chapter-4-pos-tagging.html#top-ten-words-co-occurring-with-alice" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<blockquote>
+<p>Extract the list of words that co-occur with the word “Alice”. Visualize with a chart (e.g., bar chart) the top-ten words co-occurring with the word “Alice” and their frequencies.</p>
+</blockquote>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="chapter-4-pos-tagging.html#cb14-1" aria-hidden="true" tabindex="-1"></a>id_alice <span class="ot">&lt;-</span> alice <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="chapter-4-pos-tagging.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(lemma <span class="sc">==</span> <span class="st">&quot;Alice&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="chapter-4-pos-tagging.html#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(id_sentence) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="chapter-4-pos-tagging.html#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
+<span id="cb14-5"><a href="chapter-4-pos-tagging.html#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="chapter-4-pos-tagging.html#cb14-6" aria-hidden="true" tabindex="-1"></a>alice <span class="sc">%&gt;%</span></span>
+<span id="cb14-7"><a href="chapter-4-pos-tagging.html#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id_sentence <span class="sc">%in%</span> id_alice, lemma <span class="sc">!=</span> <span class="st">&quot;Alice&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-8"><a href="chapter-4-pos-tagging.html#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(lemma) <span class="sc">%&gt;%</span></span>
+<span id="cb14-9"><a href="chapter-4-pos-tagging.html#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-10"><a href="chapter-4-pos-tagging.html#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-11"><a href="chapter-4-pos-tagging.html#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(lemma, <span class="sc">-</span>n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb14-12"><a href="chapter-4-pos-tagging.html#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb14-13"><a href="chapter-4-pos-tagging.html#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;count&quot;</span>) <span class="sc">+</span></span>
+<span id="cb14-14"><a href="chapter-4-pos-tagging.html#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="chap04_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="histogram" class="section level2 hasAnchor">
+<h2>38. Histogram<a href="chapter-4-pos-tagging.html#histogram" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<blockquote>
+<p>Draw a histogram of word frequency (x-axis is a scalar range representing a frequency ranging from 1 to the largest frequency of a given word in the entire corpus, and the y-axis is the count of unique words that fall into the count of the x value).</p>
+</blockquote>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="chapter-4-pos-tagging.html#cb15-1" aria-hidden="true" tabindex="-1"></a>alice <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="chapter-4-pos-tagging.html#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(lemma) <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="chapter-4-pos-tagging.html#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(n)) <span class="sc">+</span></span>
+<span id="cb15-4"><a href="chapter-4-pos-tagging.html#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb15-5"><a href="chapter-4-pos-tagging.html#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;frequency (count)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;number of words&quot;</span>) <span class="sc">+</span></span>
+<span id="cb15-6"><a href="chapter-4-pos-tagging.html#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="chap04_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="zipfs-law" class="section level2 hasAnchor">
+<h2>39. Zipf’s law<a href="chapter-4-pos-tagging.html#zipfs-law" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<blockquote>
+<p>Plot a log-log graph with the x-axis being rank order and the y-axis being frequency.</p>
+</blockquote>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="chapter-4-pos-tagging.html#cb17-1" aria-hidden="true" tabindex="-1"></a>alice <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="chapter-4-pos-tagging.html#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(lemma) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="chapter-4-pos-tagging.html#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rank =</span> <span class="fu">dense_rank</span>(<span class="fu">desc</span>(n))) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="chapter-4-pos-tagging.html#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(rank), <span class="at">y =</span> <span class="fu">log</span>(n))) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="chapter-4-pos-tagging.html#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb17-6"><a href="chapter-4-pos-tagging.html#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="chap04_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chapter-3-regular-expression.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
