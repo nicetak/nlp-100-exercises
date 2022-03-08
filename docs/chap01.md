@@ -244,7 +244,7 @@ typoglycemia(s)
 ```
 
 ```
-## [1] "I c'ldnuot belevie that I colud alctaluy unstndared what I was rnedaig : the pnmhoaenel power of the human mind ."
+## [1] "I cduno'lt bleevie that I colud alltuacy untdnesard what I was raidneg : the panmnheeol power of the hmuan mind ."
 ```
 
 
